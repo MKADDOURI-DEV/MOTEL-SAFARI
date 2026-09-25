@@ -1,0 +1,621 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Motel Safari Budget — Ouarzazate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Motel Safari Budget — Ouarzazate. Hébergement confortable Route de Marrakech.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+  <style>
+    :root {
+      --safari-orange: #C9541A;
+      --safari-gold:   #C89B2A;
+      --safari-dark:   #2B1810;
+      --safari-cream:  #FAF6EF;
+      --safari-sand:   #E8D5B0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; color: #333; background: #fff; }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+    /* NAVBAR */
+    .navbar { background: rgba(43,24,16,0.96) !important; backdrop-filter: blur(6px); padding: 10px 0; transition: all 0.3s; }
+    .navbar-brand img { height: 52px; width: auto; }
+    .nav-link { color: rgba(255,255,255,0.85) !important; font-size: 0.82rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; padding: 8px 14px !important; transition: color 0.2s; }
+    .nav-link:hover { color: var(--safari-gold) !important; }
+    .nav-btn .nav-link { background: var(--safari-orange); color: #fff !important; border-radius: 3px; margin-left: 8px; }
+    .nav-btn .nav-link:hover { background: var(--safari-gold); }
+
+    /* HERO */
+    .hero { min-height: 100vh; background-image: url('assets/images/hero-bg.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; position: relative; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(43,24,16,0.75) 0%, rgba(43,24,16,0.45) 100%); }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-eyebrow { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--safari-gold); margin-bottom: 1rem; font-weight: 700; }
+    .hero h1 { font-size: clamp(2.4rem, 6vw, 5rem); color: #fff; line-height: 1.1; margin-bottom: 1.2rem; }
+    .hero h1 span { color: var(--safari-gold); }
+    .hero p.lead { color: rgba(255,255,255,0.8); font-size: 1.05rem; max-width: 480px; margin-bottom: 2rem; }
+    .btn-safari { background: var(--safari-orange); color: #fff; border: none; padding: 14px 36px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 3px; transition: background 0.2s, transform 0.15s; display: inline-block; cursor: pointer; }
+    .btn-safari:hover { background: var(--safari-gold); color: #fff; text-decoration: none; transform: translateY(-1px); }
+    .btn-safari-outline { border: 2px solid rgba(255,255,255,0.5); color: #fff; padding: 13px 34px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 3px; display: inline-block; transition: all 0.2s; margin-left: 12px; }
+    .btn-safari-outline:hover { border-color: var(--safari-gold); color: var(--safari-gold); text-decoration: none; }
+
+    /* BOOKING BAR */
+    .booking-bar { background: var(--safari-dark); padding: 24px 0; }
+    .booking-bar label { color: rgba(255,255,255,0.7); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; display:block; }
+    .booking-bar .form-control { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 3px; }
+    .booking-bar .form-control::placeholder { color: rgba(255,255,255,0.4); }
+    .booking-bar select.form-control option { background: #2B1810; color: #fff; }
+
+    /* SECTIONS */
+    section { padding: 90px 0; }
+    .section-eyebrow { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--safari-orange); font-weight: 700; margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--safari-dark); margin-bottom: 16px; }
+    .divider { width: 48px; height: 3px; background: var(--safari-gold); margin: 16px auto 32px; }
+    .divider.left { margin-left: 0; }
+
+    /* ABOUT */
+    .about-section { background: var(--safari-cream); }
+    .about-img { width: 100%; height: 480px; object-fit: cover; border-radius: 4px; box-shadow: 12px 12px 0 var(--safari-sand); }
+    .about-badge { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--safari-sand); padding: 8px 16px; border-radius: 30px; font-size: 0.82rem; color: #555; margin-bottom: 8px; }
+    .about-badge i { color: var(--safari-orange); }
+
+    /* ROOMS */
+    .rooms-section { background: #fff; }
+    .room-card { border-radius: 4px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: transform 0.25s, box-shadow 0.25s; background: #fff; margin-bottom: 28px; }
+    .room-card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(0,0,0,0.15); }
+    .room-main-img { width: 100%; height: 220px; object-fit: cover; transition: opacity 0.2s; }
+    .room-thumbs { display: flex; gap: 4px; padding: 4px 4px 0; background: #f5f0e8; }
+    .room-thumbs img { flex: 1; height: 65px; object-fit: cover; cursor: pointer; opacity: 0.8; transition: opacity 0.2s; border-radius: 2px; }
+    .room-thumbs img:hover { opacity: 1; }
+    .room-card-body { padding: 18px; }
+    .room-card-body h3 { font-size: 1.15rem; color: var(--safari-dark); margin-bottom: 5px; }
+    .room-price { font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: var(--safari-orange); font-weight: 700; }
+    .room-features { list-style: none; padding: 0; margin: 10px 0 0; }
+    .room-features li { font-size: 0.82rem; color: #666; padding: 2px 0; }
+    .room-features li i { color: var(--safari-gold); margin-right: 6px; width: 14px; }
+
+    /* SERVICES */
+    .services-section { background: #fff; }
+    .service-card { text-align: center; background-size: 112%; background-position: center; border-radius: 4px; padding: 40px 24px; height: 100%; min-height: 300px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: transform 0.25s, box-shadow 0.25s, background-size 0.6s ease; }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(0,0,0,0.25); background-size: 124%; }
+    .service-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--safari-orange); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 2px solid rgba(255,255,255,0.5); }
+    .service-icon i { color: #fff; font-size: 1.4rem; }
+    .service-card h3 { font-size: 1.15rem; color: #fff; margin-bottom: 10px; }
+    .service-card p { color: rgba(255,255,255,0.85); font-size: 0.9rem; line-height: 1.6; margin-bottom: 14px; }
+
+
+    /* GALLERY — masonry style grid */
+    .gallery-section { background: var(--safari-cream); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      grid-auto-rows: 160px;
+    }
+    .g-item { overflow: hidden; border-radius: 3px; cursor: pointer; position: relative; }
+    .g-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s, opacity 0.2s; display: block; }
+    .g-item:hover img { transform: scale(1.06); opacity: 0.88; }
+    .g-item::after { content: '\f00e'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0); font-size: 1.8rem; transition: color 0.2s; }
+    .g-item:hover::after { color: rgba(255,255,255,0.85); }
+    /* Variate sizes for visual interest */
+    .g-item:nth-child(1)  { grid-column: span 2; grid-row: span 2; }
+    .g-item:nth-child(6)  { grid-column: span 2; }
+    .g-item:nth-child(11) { grid-column: span 2; grid-row: span 2; }
+    .g-item:nth-child(16) { grid-column: span 2; }
+    .g-item:nth-child(20) { grid-column: span 2; grid-row: span 2; }
+    @media(max-width: 768px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .g-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+      .g-item:nth-child(odd) { grid-column: span 2; }
+    }
+
+    /* LIGHTBOX */
+    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
+    .lightbox-overlay.active { display: flex; }
+    .lb-img-wrap { max-width: 90vw; max-height: 82vh; position: relative; }
+    .lb-img-wrap img { max-width: 90vw; max-height: 82vh; border-radius: 3px; object-fit: contain; display: block; }
+    .lb-close { position: absolute; top: 20px; right: 28px; color: #fff; font-size: 2.2rem; cursor: pointer; line-height: 1; z-index: 10; }
+    .lb-prev, .lb-next { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); color: #fff; border: none; font-size: 2rem; padding: 10px 18px; cursor: pointer; border-radius: 3px; transition: background 0.2s; }
+    .lb-prev { left: 12px; }
+    .lb-next { right: 12px; }
+    .lb-prev:hover, .lb-next:hover { background: var(--safari-orange); }
+    .lb-counter { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 12px; letter-spacing: 2px; }
+
+    /* CTA */
+    .cta-strip { background: var(--safari-orange); padding: 60px 0; }
+    .cta-strip h2 { color: #fff; font-size: 2rem; margin-bottom: 6px; }
+    .cta-strip p { color: rgba(255,255,255,0.8); }
+    .btn-cta-white { border: 2px solid #fff; color: #fff; padding: 13px 36px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 3px; display: inline-block; transition: all 0.2s; }
+    .btn-cta-white:hover { background: #fff; color: var(--safari-orange); text-decoration: none; }
+
+    /* CONTACT */
+    .contact-section { background: #fff; }
+    .contact-info-item { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 24px; }
+    .contact-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--safari-cream); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-icon i { color: var(--safari-orange); font-size: 1rem; }
+    .contact-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: #999; }
+    .contact-value { color: var(--safari-dark); font-weight: 600; font-size: 0.95rem; }
+    .contact-value a { color: var(--safari-dark); text-decoration: none; }
+    .contact-value a:hover { color: var(--safari-orange); }
+    .form-control-safari { border: 1px solid #e0d8cc; border-radius: 3px; padding: 12px 16px; font-size: 0.9rem; background: #fdfaf6; transition: border-color 0.2s; width: 100%; display:block; }
+    .form-control-safari:focus { border-color: var(--safari-orange); outline: none; background: #fff; }
+    /* CHILD AGE FIELDS */
+    .child-age-group { margin-bottom: 12px; }
+    .child-age-group label { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: #999; display: block; margin-bottom: 4px; }
+    .child-age-group select { width: 100%; border: 1px solid #e0d8cc; border-radius: 3px; padding: 10px 14px; font-size: 0.9rem; background: #fdfaf6; }
+    .btn-whatsapp { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; padding: 10px 22px; border-radius: 3px; font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; }
+    .btn-whatsapp:hover { background: #1ebe57; color: #fff; text-decoration: none; }
+
+    /* FOOTER */
+    footer { background: var(--safari-dark); padding: 60px 0 30px; color: rgba(255,255,255,0.6); }
+    footer h5 { color: #fff; font-family: 'Playfair Display', serif; margin-bottom: 18px; }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; }
+    footer a:hover { color: var(--safari-gold); }
+    footer ul { list-style: none; padding: 0; }
+    footer ul li { margin-bottom: 8px; }
+    footer .footer-brand img { height: 60px; width: auto; margin-bottom: 14px; }
+    footer .social-links a { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6) !important; margin-right: 8px; transition: all 0.2s; }
+    footer .social-links a:hover { border-color: var(--safari-gold); color: var(--safari-gold) !important; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; padding-top: 24px; font-size: 0.82rem; }
+
+    /* MODAL */
+    .modal-header { background: var(--safari-dark); border-radius: 4px 4px 0 0; }
+    .modal-title { color: #fff; font-family: 'Playfair Display', serif; }
+    .modal-header .close { color: rgba(255,255,255,0.7); }
+
+    @media(max-width:576px) {
+      .hero { min-height: 85vh; text-align: center; }
+      .hero p.lead { margin: 0 auto 2rem; }
+      .btn-safari-outline { margin: 12px 0 0; display: block; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="#"><img src="assets/images/logo.png" alt="Motel Safari Budget"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      style="border-color:rgba(255,255,255,0.3)">
+      <span class="navbar-toggler-icon" style="background-image:url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255%2c255%2c255%2c0.8%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e&quot;)"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="#accueil">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="#apropos">À Propos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#chambres">Chambres</a></li>
+        <li class="nav-item"><a class="nav-link" href="#galerie">Galerie</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        <li class="nav-item nav-btn"><a class="nav-link" href="#bookingBar">Réserver</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+  <div class="container hero-content">
+    <div class="row">
+      <div class="col-lg-7" data-aos="fade-up">
+        <p class="hero-eyebrow">Ouarzazate · Porte du Désert</p>
+        <h1>Motel Safari<br><span>Budget</span></h1>
+        <p class="lead">Hébergement budget confortable sur la Route de Marrakech — idéal pour explorer Ouarzazate, les kasbahs et le Sahara.</p>
+        <a href="#bookingBar" class="btn-safari">Réserver Maintenant</a>
+        <a href="#chambres" class="btn-safari-outline">Voir les Chambres</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING BAR -->
+<div class="booking-bar" id="bookingBar">
+  <div class="container">
+    <div class="row align-items-end">
+      <div class="col-md-3 mb-3 mb-md-0">
+        <label>Date d'arrivée</label>
+        <input type="date" class="form-control" id="barCheckIn">
+      </div>
+      <div class="col-md-3 mb-3 mb-md-0">
+        <label>Date de départ</label>
+        <input type="date" class="form-control" id="barCheckOut">
+      </div>
+      <div class="col-md-2 mb-3 mb-md-0">
+        <label>Adultes</label>
+        <select class="form-control" id="barAdultes"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select>
+      </div>
+      <div class="col-md-2 mb-3 mb-md-0">
+        <label>Enfants</label>
+        <select class="form-control" id="barEnfants"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3+</option></select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn-safari w-100" style="border:none;" id="barSubmit" type="button">Vérifier</button>
+      </div>
+    </div>
+    <div id="barEnfantsAges" class="row mt-3" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-section" id="apropos">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+        <img src="assets/images/gallery-02.jpg" alt="Motel Safari Budget" class="about-img">
+      </div>
+      <div class="col-lg-5 ml-auto" data-aos="fade-left">
+        <p class="section-eyebrow">À Propos</p>
+        <h2 class="section-title">Votre Étape à<br>Ouarzazate</h2>
+        <div class="divider left"></div>
+        <p style="color:#555;line-height:1.8;margin-bottom:1rem;">
+          Situé à <strong>Tamassinte sur la Route de Marrakech</strong>, le <strong>Motel Safari Budget</strong>
+          vous accueille dans un cadre authentique aux portes du désert marocain.
+        </p>
+        <p style="color:#555;line-height:1.8;margin-bottom:1.5rem;">
+          Confort, simplicité et hospitalité berbère — l'arrêt idéal pour les voyageurs
+          qui explorent Ouarzazate, Aït-Ben-Haddou et les dunes du Sahara.
+        </p>
+        <div class="about-badge"><i class="fas fa-check-circle"></i> Annulation gratuite jusqu'à 72h avant l'arrivée</div><br>
+        <div class="about-badge"><i class="fas fa-credit-card"></i> Espèces · Carte bancaire · Virement</div><br>
+        <div class="about-badge"><i class="fas fa-receipt"></i> Taxe de séjour 10 MAD · TVA 10%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section class="rooms-section" id="chambres">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Hébergement</p>
+        <h2 class="section-title">Nos Chambres</h2>
+        <div class="divider mx-auto"></div>
+        <p style="color:#777;">Des chambres propres et confortables à petit prix.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="room-card">
+          <img class="room-main-img" src="assets/images/gallery-06.jpg" alt="Chambre 1">
+          <div class="room-thumbs">
+            <img src="assets/images/gallery-07.jpg" alt="" onclick="swapImg(this)">
+            <img src="assets/images/gallery-08.jpg" alt="" onclick="swapImg(this)">
+            <img src="assets/images/gallery-09.jpg" alt="" onclick="swapImg(this)">
+          </div>
+          <div class="room-card-body">
+            <h3>Chambre 1</h3>
+            <p class="room-price">À confirmer / nuit</p>
+            <ul class="room-features">
+              <li><i class="fas fa-bed"></i> Lit confortable</li>
+              <li><i class="fas fa-wifi"></i> Wi-Fi inclus</li>
+              <li><i class="fas fa-snowflake"></i> Climatisation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="room-card">
+          <img class="room-main-img" src="assets/images/gallery-13.jpg" alt="Chambre 2">
+          <div class="room-thumbs">
+            <img src="assets/images/gallery-11.jpg" alt="" onclick="swapImg(this)">
+            <img src="assets/images/gallery-12.jpg" alt="" onclick="swapImg(this)">
+            <img src="assets/images/gallery-16.jpg" alt="" onclick="swapImg(this)">
+          </div>
+          <div class="room-card-body">
+            <h3>Chambre 2</h3>
+            <p class="room-price">À confirmer / nuit</p>
+            <ul class="room-features">
+              <li><i class="fas fa-bed"></i> Lit confortable</li>
+              <li><i class="fas fa-wifi"></i> Wi-Fi inclus</li>
+              <li><i class="fas fa-snowflake"></i> Climatisation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="room-card">
+          <img class="room-main-img" src="assets/images/gallery-14.jpg" alt="Chambre 3">
+          <div class="room-thumbs">
+            <img src="assets/images/gallery-15.jpg" alt="" onclick="swapImg(this)">
+            <img src="assets/images/gallery-16.jpg" alt="" onclick="swapImg(this)">
+            <img src="assets/images/DSC00002.png" alt="" onclick="swapImg(this)">
+          </div>
+          <div class="room-card-body">
+            <h3>Chambre 3</h3>
+            <p class="room-price">À confirmer / nuit</p>
+            <ul class="room-features">
+              <li><i class="fas fa-bed"></i> Lit confortable</li>
+              <li><i class="fas fa-wifi"></i> Wi-Fi inclus</li>
+              <li><i class="fas fa-snowflake"></i> Climatisation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Nos Services</p>
+        <h2 class="section-title">Ce Que Nous Offrons</h2>
+        <div class="divider mx-auto"></div>
+        <p style="color:#777;">Des services pensés pour rendre votre séjour simple et agréable.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="service-card" style="background-image: linear-gradient(180deg, rgba(43,24,16,0.15) 0%, rgba(43,24,16,0.88) 100%), url('assets/images/services/restocafe-bg.jpg');">
+          <div class="service-icon"><i class="fas fa-utensils"></i></div>
+          <h3>Resto Café</h3>
+          <p>Cuisine marocaine et internationale, thé à la menthe et pâtisseries, dans une ambiance conviviale.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="service-card" style="background-image: linear-gradient(180deg, rgba(43,24,16,0.15) 0%, rgba(43,24,16,0.88) 100%), url('assets/images/services/voitures-bg.jpg');">
+          <div class="service-icon"><i class="fas fa-car-side"></i></div>
+          <h3>Location de Voitures</h3>
+          <p>Louez un véhicule directement sur place pour explorer Ouarzazate, les kasbahs et la région à votre rythme.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="service-card" style="background-image: linear-gradient(180deg, rgba(43,24,16,0.15) 0%, rgba(43,24,16,0.88) 100%), url('assets/images/services/quad-bg.jpg');">
+          <div class="service-icon"><i class="fas fa-motorcycle"></i></div>
+          <h3>Balades en Quad</h3>
+          <p>Partez à l'aventure dans le désert et les paysages environnants lors d'excursions en quad encadrées.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-section" id="galerie">
+  <div class="container-fluid px-4">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Galerie</p>
+        <h2 class="section-title">Photos</h2>
+        <div class="divider mx-auto"></div>
+        <p style="color:#777;">23 photos — cliquez pour agrandir</p>
+      </div>
+    </div>
+    <div class="gallery-grid" data-aos="fade-up">
+      <div class="g-item" onclick="openLb(0)"><img src="assets/images/gallery-01.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(1)"><img src="assets/images/gallery-02.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(2)"><img src="assets/images/gallery-03.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(3)"><img src="assets/images/gallery-04.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(4)"><img src="assets/images/gallery-05.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(5)"><img src="assets/images/DSC00058.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(6)"><img src="assets/images/DSC00090.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(7)"><img src="assets/images/DSC00101.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(8)"><img src="assets/images/DSC00117.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(9)"><img src="assets/images/DSC00138.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(10)"><img src="assets/images/DSC00144.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(11)"><img src="assets/images/gallery-22.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(12)"><img src="assets/images/DSC00147.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(13)"><img src="assets/images/DSC00160.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(14)"><img src="assets/images/DSC00154.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(17)"><img src="assets/images/gallery-18.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(18)"><img src="assets/images/gallery-19.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(19)"><img src="assets/images/gallery-20.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(20)"><img src="assets/images/gallery-21.jpg" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(21)"><img src="assets/images/DSC00146.png" alt="Motel Safari Budget"></div>
+      <div class="g-item" onclick="openLb(22)"><img src="assets/images/gallery-23.jpg" alt="Motel Safari Budget"></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox">
+  <span class="lb-close" onclick="closeLb()">&times;</span>
+  <button class="lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <div class="lb-img-wrap">
+    <img id="lb-img" src="" alt="">
+  </div>
+  <div class="lb-counter" id="lb-counter">1 / 23</div>
+  <button class="lb-next" onclick="lbNav(1)">&#8250;</button>
+</div>
+
+<!-- CTA -->
+<section class="cta-strip">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-7 mb-4 mb-md-0" data-aos="fade-right">
+        <h2>Votre prochaine étape à Ouarzazate</h2>
+        <p>Réservez directement — sans frais supplémentaires.</p>
+      </div>
+      <div class="col-md-5 text-md-right" data-aos="fade-left">
+        <a href="#bookingBar" class="btn-cta-white">Réserver Maintenant</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Contact</p>
+        <h2 class="section-title">Contactez-Nous</h2>
+        <div class="divider mx-auto"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+        <div class="p-4 p-md-5" style="border:1px solid #e8d5b0;border-radius:4px;">
+          <div class="form-group">
+            <label style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;color:#999;">Nom complet</label>
+            <input type="text" class="form-control-safari" placeholder="Votre nom">
+          </div><br>
+          <div class="form-group">
+            <label style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;color:#999;">Téléphone</label>
+            <input type="tel" class="form-control-safari" placeholder="+212 ...">
+          </div><br>
+          <div class="form-group">
+            <label style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;color:#999;">Email</label>
+            <input type="email" class="form-control-safari" placeholder="email@exemple.com">
+          </div><br>
+          <div class="form-group">
+            <label style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;color:#999;">Message</label>
+            <textarea class="form-control-safari" rows="5" placeholder="Votre message..."></textarea>
+          </div><br>
+          <button class="btn-safari" style="border:none;width:100%;text-align:center;">Envoyer le Message</button>
+        </div>
+      </div>
+      <div class="col-lg-5 ml-auto" data-aos="fade-left">
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div><div class="contact-label">Adresse</div><div class="contact-value">Station Service Winxo Tamassinte,<br>Route de Marrakech, 45000 Ouarzazate</div></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+          <div><div class="contact-label">Téléphone</div><div class="contact-value"><a href="tel:+212664913350">06 64 91 33 50</a></div></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div><div class="contact-label">Email</div><div class="contact-value"><a href="mailto:motelbudgetsafari.ozte@gmail.com">motelbudgetsafari.ozte@gmail.com</a></div></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+          <div><div class="contact-label">Instagram</div><div class="contact-value"><a href="https://www.instagram.com/motel_safari_budget" target="_blank">@motel_safari_budget</a></div></div>
+        </div>
+        <a href="https://wa.me/212664913350" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> Écrire sur WhatsApp</a>
+        <div class="mt-4">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26900!2d-6.8936!3d30.9335!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdafeec0e8c38d7f%3A0x60d0b2e12d1a2e3!2sOuarzazate!5e0!3m2!1sfr!2sma!4v1"
+            width="100%" height="220" style="border:0;border-radius:4px;" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-lg-3 mb-5">
+        <div class="footer-brand"><img src="assets/images/logo.png" alt="Motel Safari Budget"></div>
+        <p style="font-size:0.88rem;line-height:1.7;">Hébergement budget confortable à Ouarzazate — Porte du Sahara marocain.</p>
+        <div class="social-links mt-3">
+          <a href="https://www.instagram.com/motel_safari_budget" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/212664913350" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 mb-5 ml-lg-auto">
+        <h5 style="font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;">Navigation</h5>
+        <ul>
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#apropos">À Propos</a></li>
+          <li><a href="#chambres">Chambres</a></li>
+          <li><a href="#galerie">Galerie</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-4 mb-5">
+        <h5 style="font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;">Contact</h5>
+        <ul>
+          <li>Tamassinte, Route de Marrakech</li>
+          <li>45000 Ouarzazate, Maroc</li>
+          <li class="mt-2"><a href="tel:+212664913350">06 64 91 33 50</a></li>
+          <li><a href="mailto:winxoo.food@gmail.com">motelbudgetsafari.ozte@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-4 mb-5">
+        <h5 style="font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;">Paiements</h5>
+        <ul>
+          <li><i class="fas fa-money-bill-wave mr-2" style="color:var(--safari-gold)"></i>Espèces</li>
+          <li><i class="fas fa-credit-card mr-2" style="color:var(--safari-gold)"></i>Carte bancaire (TPE)</li>
+          <li><i class="fas fa-university mr-2" style="color:var(--safari-gold)"></i>Virement bancaire</li>
+        </ul>
+        <p class="mt-3" style="font-size:0.8rem;">Annulation gratuite jusqu'à<br><strong style="color:#fff;">72h avant l'arrivée</strong></p>
+      </div>
+    </div>
+    <div class="footer-bottom d-flex justify-content-between flex-wrap">
+      <span>&copy; <script>document.write(new Date().getFullYear())</script> Motel Safari Budget — Ouarzazate. Tous droits réservés.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="js/booking.js"></script>
+<script>
+  AOS.init({ duration: 700, once: true, offset: 60 });
+
+  function swapImg(thumb) {
+    var card = thumb.closest('.room-card');
+    var main = card.querySelector('.room-main-img');
+    var oldSrc = main.src;
+    main.src = thumb.src;
+    thumb.src = oldSrc;
+  }
+
+  var lbImages = [
+    'assets/images/gallery-01.jpg',
+    'assets/images/gallery-02.jpg',
+    'assets/images/gallery-03.jpg',
+    'assets/images/gallery-04.jpg',
+    'assets/images/gallery-05.jpg',
+    'assets/images/gallery-06.jpg',
+    'assets/images/gallery-07.jpg',
+    'assets/images/gallery-08.jpg',
+    'assets/images/gallery-09.jpg',
+    'assets/images/gallery-10.jpg',
+    'assets/images/gallery-11.jpg',
+    'assets/images/gallery-12.jpg',
+    'assets/images/gallery-13.jpg',
+    'assets/images/gallery-14.jpg',
+    'assets/images/gallery-15.jpg',
+    'assets/images/gallery-16.jpg',
+    'assets/images/gallery-17.jpg',
+    'assets/images/gallery-18.jpg',
+    'assets/images/gallery-19.jpg',
+    'assets/images/gallery-20.jpg',
+    'assets/images/gallery-21.jpg',
+    'assets/images/gallery-22.jpg',
+    'assets/images/gallery-23.jpg'
+  ];
+  var lbCurrent = 0;
+  var total = lbImages.length;
+
+  function openLb(i) {
+    lbCurrent = i;
+    document.getElementById('lb-img').src = lbImages[i];
+    document.getElementById('lb-counter').textContent = (i+1) + ' / ' + total;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLb() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  function lbNav(dir) {
+    lbCurrent = (lbCurrent + dir + total) % total;
+    document.getElementById('lb-img').src = lbImages[lbCurrent];
+    document.getElementById('lb-counter').textContent = (lbCurrent+1) + ' / ' + total;
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if(e.target === this) closeLb();
+  });
+  document.addEventListener('keydown', function(e) {
+    if(e.key === 'Escape') closeLb();
+    if(e.key === 'ArrowRight') lbNav(1);
+    if(e.key === 'ArrowLeft') lbNav(-1);
+  });
+</script>
+</body>
+</html>
