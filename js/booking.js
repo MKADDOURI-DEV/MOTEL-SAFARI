@@ -78,6 +78,20 @@ function collectChildAges(container) {
   return Array.from(container.querySelectorAll(".child-age-select")).map(sel => sel.value);
 }
 
+
+// --- Dates: bloquer les jours passés -------------------------------------
+function toISODate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function addDays(iso, n) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return toISODate(new Date(y, m - 1, d + n));
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const barCheckIn = document.getElementById("barCheckIn");
   const barCheckOut = document.getElementById("barCheckOut");
@@ -85,6 +99,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const barEnfants = document.getElementById("barEnfants");
   const barEnfantsAges = document.getElementById("barEnfantsAges");
   const barSubmit = document.getElementById("barSubmit");
+
+
+  // Les jours passés sont grisés / non sélectionnables dans le calendrier
+  const today = toISODate(new Date());
+  if (barCheckIn && barCheckOut) {
+    barCheckIn.min = today;
+    barCheckOut.min = addDays(today, 1);
+
+    barCheckIn.addEventListener("change", function () {
+      if (!this.value) {
+        barCheckOut.min = addDays(today, 1);
+        return;
+      }
+      const minOut = addDays(this.value, 1);
+      barCheckOut.min = minOut;
+      if (barCheckOut.value && barCheckOut.value < minOut) {
+        barCheckOut.value = "";
+      }
+    });
+  }
 
   // Show/hide dynamic child-age selects when the "Enfants" count changes
   if (barEnfants && barEnfantsAges) {
@@ -106,6 +140,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!checkIn || !checkOut) {
         alert("Merci de sélectionner une date d'arrivée et de départ.");
+        return;
+      }
+
+      if (checkIn < today) {
+        alert("La date d'arrivée ne peut pas être dans le passé.");
+        return;
+      }
+
+      if (checkOut <= checkIn) {
+        alert("La date de départ doit être après la date d'arrivée.");
         return;
       }
 
