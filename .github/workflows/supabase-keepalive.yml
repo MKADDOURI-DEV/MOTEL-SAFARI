@@ -1,0 +1,21 @@
+name: Supabase keep-alive
+
+# Ping Supabase tous les 3 jours pour que le projet gratuit ne soit jamais mis en pause.
+on:
+  schedule:
+    - cron: "0 6 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          curl -fsS --retry 3 --max-time 30 \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL}/rest/v1/rooms?select=id&limit=1"
+        env:
+          SUPABASE_URL: https://hnqlijktszjysdnnhwun.supabase.co
+          SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhucWxpamt0c3pqeXNkbm5od3VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNzk4NjUsImV4cCI6MjEwNzY1NTg2NX0.N5xhWOlB0FN21SM8JftZU8q_sH2iAnxQ-Z5lpPgEx2g
