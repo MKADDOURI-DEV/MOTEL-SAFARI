@@ -57,3 +57,20 @@ drop policy if exists "public read gallery" on gallery;
 drop policy if exists "admin write gallery" on gallery;
 create policy "public read gallery" on gallery for select using (true);
 create policy "admin write gallery" on gallery for all to authenticated using (true) with check (true);
+
+-- ---------- Services (cartes de la section "Nos Services") ----------
+create table if not exists services (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  text text,
+  icon text default 'fas fa-star',
+  image_url text,
+  visible boolean default true,
+  sort_order int default 0,
+  created_at timestamptz default now()
+);
+alter table services enable row level security;
+drop policy if exists "public read services" on services;
+drop policy if exists "admin write services" on services;
+create policy "public read services" on services for select using (true);
+create policy "admin write services" on services for all to authenticated using (true) with check (true);

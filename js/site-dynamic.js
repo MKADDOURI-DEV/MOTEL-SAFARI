@@ -82,6 +82,24 @@
     });
   }
 
+
+  // ---------- Services ----------
+  var svRows = document.querySelectorAll('#services .container > .row');
+  if (svRows[1]) {
+    get('services?visible=eq.true&order=sort_order.asc,created_at.asc&select=*').then(function (list) {
+      if (!Array.isArray(list) || !list.length) return;
+      svRows[1].innerHTML = list.map(function (v, i) {
+        var icon = /^fa[srb] fa-[a-z0-9-]+$/.test(v.icon || '') ? v.icon : 'fas fa-star';
+        var bg = v.image_url
+          ? ", url('" + encodeURI(v.image_url).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29') + "')"
+          : '';
+        return '<div class="col-md-6 col-lg-4 mb-4"><div class="service-card" style="background-image: linear-gradient(180deg, rgba(43,24,16,0.15) 0%, rgba(43,24,16,0.88) 100%)' + bg + ';">' +
+          '<div class="service-icon"><i class="' + icon + '"></i></div><h3>' + esc(v.title) + '</h3>' +
+          (v.text ? '<p>' + esc(v.text) + '</p>' : '') + '</div></div>';
+      }).join('');
+    });
+  }
+
   // ---------- Galerie ----------
   var grid = document.querySelector('#galerie .gallery-grid');
   if (grid) {

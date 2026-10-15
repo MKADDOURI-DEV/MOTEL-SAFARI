@@ -73,6 +73,7 @@
 
     <ul class="nav nav-tabs mb-4" id="tabs">
       <li class="nav-item"><a class="nav-link active" data-tab="rooms">Chambres</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="services">Services</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="gallery">Galerie</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="texts">Textes &amp; infos du site</a></li>
       <li class="nav-item"><a class="nav-link" data-tab="account">Mon compte</a></li>
@@ -149,6 +150,37 @@
       </div>
     </div>
     </div><!-- /tab-rooms -->
+
+    <!-- Services -->
+    <div id="tab-services" hidden>
+      <div id="svList">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h4 mb-0">Services</h2>
+          <div>
+            <button id="svSeed" type="button" class="btn btn-outline-secondary btn-sm mr-2" hidden>Importer les 3 services actuels</button>
+            <button id="svNew" type="button" class="btn btn-safari btn-sm">+ Nouveau service</button>
+          </div>
+        </div>
+        <div class="card"><div class="table-responsive"><table class="table mb-0">
+          <thead><tr><th></th><th>Titre</th><th>Icône</th><th>Ordre</th><th>Visible</th><th></th></tr></thead>
+          <tbody id="svBody"></tbody></table></div></div>
+        <p class="text-muted small mt-3">Tant que la liste est vide ici, le site garde ses 3 services actuels. Le titre et l'introduction de la section se modifient dans « Textes &amp; infos du site ».</p>
+      </div>
+      <div id="svEdit" hidden>
+        <div class="card p-4">
+          <h2 id="svEditTitle" class="h4 mb-3">Service</h2>
+          <div class="form-row">
+            <div class="form-group col-md-6"><label for="svTitle">Titre</label><input id="svTitle" class="form-control" placeholder="Resto Café"></div>
+            <div class="form-group col-md-4"><label for="svIcon">Icône</label><select id="svIcon" class="form-control"></select></div>
+            <div class="form-group col-md-2"><label for="svOrder">Ordre</label><input id="svOrder" type="number" class="form-control" value="0"></div>
+          </div>
+          <div class="form-group"><label for="svText">Texte</label><textarea id="svText" rows="3" class="form-control"></textarea></div>
+          <div class="form-group"><label>Photo de fond (optionnelle)</label><div id="svImgPrev"></div><input id="svImg" type="file" accept="image/*" class="form-control-file"></div>
+          <div class="form-group form-check"><input id="svVisible" type="checkbox" class="form-check-input" checked><label for="svVisible" class="form-check-label">Visible sur le site</label></div>
+          <div><button id="svSave" type="button" class="btn btn-safari">Enregistrer</button><button id="svCancel" type="button" class="btn btn-link">Annuler</button></div>
+        </div>
+      </div>
+    </div>
 
     <!-- Galerie -->
     <div id="tab-gallery" hidden>
@@ -263,8 +295,8 @@
   document.getElementById('tabs').addEventListener('click', function (e) {
     var t = e.target.dataset.tab; if (!t) return;
     Array.prototype.forEach.call(document.querySelectorAll('#tabs .nav-link'), function (a) { a.classList.toggle('active', a === e.target); });
-    ['rooms', 'gallery', 'texts', 'account'].forEach(function (n) { $('tab-' + n).hidden = n !== t; });
-    if (!loaded[t]) { loaded[t] = true; if (t === 'gallery') loadGallery(); if (t === 'texts') loadTexts(); if (t === 'account') loadAccount(); }
+    ['rooms', 'services', 'gallery', 'texts', 'account'].forEach(function (n) { $('tab-' + n).hidden = n !== t; });
+    if (!loaded[t]) { loaded[t] = true; if (t === 'services') loadServices(); if (t === 'gallery') loadGallery(); if (t === 'texts') loadTexts(); if (t === 'account') loadAccount(); }
   });
 
   // ---------- Liste ----------
@@ -312,6 +344,90 @@
     flash('3 chambres importées. Tu peux maintenant les modifier.'); loadRooms();
   };
 
+
+
+  // ---------- Services ----------
+  var services = [], svEd = null;
+  var ICONS = [['fas fa-utensils','Restaurant / café'],['fas fa-car-side','Voiture'],['fas fa-motorcycle','Quad / moto'],['fas fa-shuttle-van','Navette / transfert'],
+    ['fas fa-map-marked-alt','Excursions'],['fas fa-hiking','Randonnée'],['fas fa-wifi','Wi-Fi'],['fas fa-parking','Parking'],['fas fa-swimming-pool','Piscine'],
+    ['fas fa-concierge-bell','Réception'],['fas fa-coffee','Petit-déjeuner'],['fas fa-spa','Détente'],['fas fa-snowflake','Climatisation'],['fas fa-star','Autre']];
+  async function loadServices() {
+    var r = await sb.from('services').select('*').order('sort_order').order('created_at');
+    if (r.error) return flash('Erreur services : ' + r.error.message, 'danger');
+    services = r.data || []; renderServices();
+  }
+  function renderServices() {
+    $('svSeed').hidden = services.length > 0;
+    $('svBody').innerHTML = services.length ? services.map(function (v) {
+      return '<tr><td>' + (v.image_url ? '<img class="thumb" src="' + esc(src(v.image_url)) + '" alt="">' : '<div class="thumb"></div>') + '</td>' +
+        '<td>' + esc(v.title) + '</td><td><i class="' + esc(v.icon) + '"></i></td><td>' + esc(v.sort_order) + '</td>' +
+        '<td><input type="checkbox" data-svis="' + v.id + '"' + (v.visible ? ' checked' : '') + '></td>' +
+        '<td class="text-right text-nowrap"><button class="btn btn-sm btn-outline-secondary" data-sedit="' + v.id + '">Modifier</button> ' +
+        '<button class="btn btn-sm btn-outline-danger" data-sdel="' + v.id + '">Supprimer</button></td></tr>';
+    }).join('') : '<tr><td colspan="6" class="text-center text-muted py-4">Aucun service. Importe les 3 actuels ou crée-en un.</td></tr>';
+  }
+  $('svBody').addEventListener('click', async function (e) {
+    var d = e.target.dataset;
+    if (d.sedit) openService(services.find(function (v) { return v.id === d.sedit; }));
+    if (d.sdel) {
+      var v = services.find(function (x) { return x.id === d.sdel; });
+      if (!confirm('Supprimer « ' + v.title + ' » ?')) return;
+      var r = await sb.from('services').delete().eq('id', v.id);
+      if (r.error) return flash('Erreur : ' + r.error.message, 'danger');
+      flash('Service supprimé.'); loadServices();
+    }
+  });
+  $('svBody').addEventListener('change', async function (e) {
+    var id = e.target.dataset.svis; if (!id) return;
+    var r = await sb.from('services').update({ visible: e.target.checked }).eq('id', id);
+    if (r.error) { flash('Erreur : ' + r.error.message, 'danger'); e.target.checked = !e.target.checked; } else loadServices();
+  });
+  $('svSeed').onclick = async function () {
+    var html = await (await fetch('../index.html', { cache: 'no-store' })).text();
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var rows = Array.prototype.map.call(doc.querySelectorAll('#services .service-card'), function (c, i) {
+      var m = (c.getAttribute('style') || '').match(/url\(['"]?([^'")]+)['"]?\)/);
+      var ic = c.querySelector('.service-icon i');
+      return { title: c.querySelector('h3').textContent.trim(), text: c.querySelector('p').textContent.trim(),
+        icon: ic ? ic.className.trim() : 'fas fa-star', image_url: m ? m[1] : null, sort_order: i + 1, visible: true };
+    });
+    var r = await sb.from('services').insert(rows);
+    if (r.error) return flash('Erreur import : ' + r.error.message, 'danger');
+    flash(rows.length + ' services importés.'); loadServices();
+  };
+  $('svNew').onclick = function () { openService(null); };
+  $('svCancel').onclick = function () { svEd = null; $('svEdit').hidden = true; $('svList').hidden = false; };
+  function openService(v) {
+    svEd = { id: v ? v.id : null, image_url: v ? v.image_url : null, newImg: null };
+    var icons = ICONS.slice();
+    if (v && !icons.some(function (i) { return i[0] === v.icon; })) icons.unshift([v.icon, v.icon]);
+    $('svIcon').innerHTML = icons.map(function (i) { return '<option value="' + esc(i[0]) + '">' + esc(i[1]) + '</option>'; }).join('');
+    $('svEditTitle').textContent = v ? 'Modifier : ' + v.title : 'Nouveau service';
+    $('svTitle').value = v ? v.title : ''; $('svText').value = v && v.text ? v.text : '';
+    $('svIcon').value = v ? v.icon : 'fas fa-star'; $('svOrder').value = v ? v.sort_order : services.length + 1;
+    $('svVisible').checked = v ? !!v.visible : true; $('svImg').value = '';
+    svPreview(); $('svList').hidden = true; $('svEdit').hidden = false;
+  }
+  function svPreview() {
+    $('svImgPrev').innerHTML = svEd.newImg ? '<div class="img-chip"><img src="' + URL.createObjectURL(svEd.newImg) + '" alt=""></div>'
+      : svEd.image_url ? '<div class="img-chip"><img src="' + esc(src(svEd.image_url)) + '" alt=""><button type="button" class="btn btn-danger" id="svImgRm">×</button></div>' : '';
+  }
+  $('svImgPrev').addEventListener('click', function (e) { if (e.target.id === 'svImgRm') { svEd.image_url = null; svPreview(); } });
+  $('svImg').onchange = function () { svEd.newImg = this.files[0] || null; svPreview(); };
+  $('svSave').onclick = async function () {
+    var title = $('svTitle').value.trim();
+    if (!title) return flash('Le titre est obligatoire.', 'warning');
+    var btn = this; btn.disabled = true;
+    try {
+      var img = svEd.newImg ? await upload(svEd.newImg) : svEd.image_url;
+      var row = { title: title, text: $('svText').value.trim() || null, icon: $('svIcon').value, image_url: img || null,
+        visible: $('svVisible').checked, sort_order: parseInt($('svOrder').value, 10) || 0 };
+      var r = await (svEd.id ? sb.from('services').update(row).eq('id', svEd.id) : sb.from('services').insert(row));
+      if (r.error) throw r.error;
+      flash('Service enregistré.'); $('svCancel').click(); loadServices();
+    } catch (err) { flash('Erreur : ' + (err.message || err), 'danger'); }
+    btn.disabled = false;
+  };
 
   // ---------- Galerie ----------
   var gallery = [];
