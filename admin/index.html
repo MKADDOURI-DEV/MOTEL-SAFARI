@@ -18,6 +18,13 @@
     .img-chip img { width: 96px; height: 70px; object-fit: cover; border-radius: 3px; }
     .img-chip button { position: absolute; top: -6px; right: -6px; border-radius: 50%; width: 22px; height: 22px; padding: 0; line-height: 1; }
     .card { border: 0; box-shadow: 0 2px 14px rgba(0,0,0,.08); }
+    .gal-item { position: relative; display: inline-block; margin: 0 10px 10px 0; }
+    .gal-item img { width: 140px; height: 100px; object-fit: cover; border-radius: 4px; display: block; }
+    .gal-actions { position: absolute; bottom: 4px; left: 4px; right: 4px; display: flex; justify-content: space-between; }
+    .gal-actions button { padding: 0 8px; line-height: 22px; font-size: 13px; }
+    .nav-tabs .nav-link { cursor: pointer; color: var(--dark); }
+    .nav-tabs .nav-link.active { border-bottom: 3px solid var(--orange); font-weight: 600; }
+    .group-title { margin: 28px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--gold); font-size: 1.05rem; text-transform: uppercase; letter-spacing: 1px; }
     [hidden] { display: none !important; }
   </style>
 </head>
@@ -64,6 +71,14 @@
   <div class="container py-4">
     <div id="msg" class="alert" hidden></div>
 
+    <ul class="nav nav-tabs mb-4" id="tabs">
+      <li class="nav-item"><a class="nav-link active" data-tab="rooms">Chambres</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="gallery">Galerie</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="texts">Textes &amp; infos du site</a></li>
+      <li class="nav-item"><a class="nav-link" data-tab="account">Mon compte</a></li>
+    </ul>
+
+    <div id="tab-rooms">
     <!-- Liste -->
     <div id="listPanel">
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -133,6 +148,54 @@
         </div>
       </div>
     </div>
+    </div><!-- /tab-rooms -->
+
+    <!-- Galerie -->
+    <div id="tab-gallery" hidden>
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <h2 class="h4 mb-0">Galerie <small class="text-muted">(<span id="galCount">0</span> photos)</small></h2>
+        <div>
+          <button id="galSeed" type="button" class="btn btn-outline-secondary btn-sm mr-2" hidden>Importer les photos actuelles</button>
+          <label class="btn btn-safari btn-sm mb-0">+ Ajouter des photos<input id="galFiles" type="file" accept="image/*" multiple hidden></label>
+        </div>
+      </div>
+      <div class="card p-3"><div id="galGrid"></div></div>
+      <p class="text-muted small mt-3">Les flèches changent l'ordre, × supprime la photo. Tant que la galerie est vide ici, le site garde ses photos actuelles.</p>
+    </div>
+
+    <!-- Textes -->
+    <div id="tab-texts" hidden>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h4 mb-0">Textes &amp; infos du site</h2>
+        <button id="textsSave" type="button" class="btn btn-safari">Enregistrer</button>
+      </div>
+      <p class="text-muted small">Astuces : <code>**mot**</code> = gras · Entrée = retour à la ligne · champ vidé = texte par défaut.</p>
+      <div class="card p-4"><div id="textsForm">Chargement…</div></div>
+    </div>
+
+    <!-- Compte -->
+    <div id="tab-account" hidden>
+      <h2 class="h4 mb-3">Mon compte</h2>
+      <div class="row">
+        <div class="col-lg-6 mb-4">
+          <div class="card p-4">
+            <h3 class="h6 mb-3">Email de connexion</h3>
+            <p class="small text-muted mb-2">Actuel : <strong id="curEmail">…</strong></p>
+            <div class="form-group"><input id="newEmail" type="email" class="form-control" placeholder="nouvel@email.com" autocomplete="off"></div>
+            <button id="emailBtn" type="button" class="btn btn-safari btn-sm">Changer l'email</button>
+            <p class="small text-muted mt-2 mb-0">Un lien de confirmation est envoyé : l'email ne change qu'après avoir cliqué dessus.</p>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+          <div class="card p-4">
+            <h3 class="h6 mb-3">Mot de passe</h3>
+            <div class="form-group"><input id="newPass" type="password" class="form-control" placeholder="Nouveau mot de passe (8 caractères min.)" autocomplete="new-password"></div>
+            <div class="form-group"><input id="newPass2" type="password" class="form-control" placeholder="Confirmer le mot de passe" autocomplete="new-password"></div>
+            <button id="passBtn" type="button" class="btn btn-safari btn-sm">Changer le mot de passe</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -182,7 +245,7 @@
   function route(session) {
     show('loginView', !session);
     show('appView', !!session);
-    if (session) loadRooms();
+    if (session) { loadRooms(); }
   }
   sb.auth.getSession().then(function (r) { route(r.data.session); });
   sb.auth.onAuthStateChange(function (_e, session) { route(session); });
@@ -194,6 +257,15 @@
   };
   $('password').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('loginBtn').click(); });
   $('logoutBtn').onclick = function (e) { e.preventDefault(); sb.auth.signOut(); };
+
+  // ---------- Onglets ----------
+  var loaded = {};
+  document.getElementById('tabs').addEventListener('click', function (e) {
+    var t = e.target.dataset.tab; if (!t) return;
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs .nav-link'), function (a) { a.classList.toggle('active', a === e.target); });
+    ['rooms', 'gallery', 'texts', 'account'].forEach(function (n) { $('tab-' + n).hidden = n !== t; });
+    if (!loaded[t]) { loaded[t] = true; if (t === 'gallery') loadGallery(); if (t === 'texts') loadTexts(); if (t === 'account') loadAccount(); }
+  });
 
   // ---------- Liste ----------
   async function loadRooms() {
@@ -238,6 +310,158 @@
     var r = await sb.from('rooms').insert(SEED);
     if (r.error) return flash('Erreur import : ' + r.error.message, 'danger');
     flash('3 chambres importées. Tu peux maintenant les modifier.'); loadRooms();
+  };
+
+
+  // ---------- Galerie ----------
+  var gallery = [];
+  async function loadGallery() {
+    var r = await sb.from('gallery').select('*').order('sort_order').order('created_at');
+    if (r.error) return flash('Erreur galerie : ' + r.error.message, 'danger');
+    gallery = r.data || [];
+    renderGallery();
+  }
+  function renderGallery() {
+    $('galCount').textContent = gallery.length;
+    $('galSeed').hidden = gallery.length > 0;
+    $('galGrid').innerHTML = gallery.length ? gallery.map(function (g, i) {
+      return '<div class="gal-item"><img src="' + esc(src(g.image_url)) + '" alt="">' +
+        '<div class="gal-actions">' +
+        '<button class="btn btn-light" data-gl="' + i + '"' + (i === 0 ? ' disabled' : '') + '>←</button>' +
+        '<button class="btn btn-danger" data-gd="' + g.id + '">×</button>' +
+        '<button class="btn btn-light" data-gr="' + i + '"' + (i === gallery.length - 1 ? ' disabled' : '') + '>→</button>' +
+        '</div></div>';
+    }).join('') : '<p class="text-muted mb-0">Aucune photo. Ajoute des photos ou importe celles du site actuel.</p>';
+  }
+  async function saveOrder() {
+    var rows = gallery.map(function (g, i) { return { id: g.id, image_url: g.image_url, alt: g.alt, sort_order: i }; });
+    var r = await sb.from('gallery').upsert(rows);
+    if (r.error) flash('Erreur : ' + r.error.message, 'danger');
+    loadGallery();
+  }
+  $('galGrid').addEventListener('click', async function (e) {
+    var d = e.target.dataset;
+    if (d.gl !== undefined || d.gr !== undefined) {
+      var i = +(d.gl !== undefined ? d.gl : d.gr), j = d.gl !== undefined ? i - 1 : i + 1;
+      var tmp = gallery[i]; gallery[i] = gallery[j]; gallery[j] = tmp;
+      saveOrder();
+    }
+    if (d.gd) {
+      if (!confirm('Supprimer cette photo de la galerie ?')) return;
+      var r = await sb.from('gallery').delete().eq('id', d.gd);
+      if (r.error) return flash('Erreur : ' + r.error.message, 'danger');
+      loadGallery();
+    }
+  });
+  $('galFiles').onchange = async function () {
+    var files = Array.prototype.slice.call(this.files); this.value = '';
+    if (!files.length) return;
+    flash('Envoi de ' + files.length + ' photo(s)…', 'info');
+    try {
+      var rows = [], base = gallery.length;
+      for (var i = 0; i < files.length; i++) rows.push({ image_url: await upload(files[i]), sort_order: base + i });
+      var r = await sb.from('gallery').insert(rows);
+      if (r.error) throw r.error;
+      flash(files.length + ' photo(s) ajoutée(s).'); loadGallery();
+    } catch (err) { flash('Erreur : ' + (err.message || err), 'danger'); }
+  };
+  $('galSeed').onclick = async function () {
+    var html = await (await fetch('../index.html', { cache: 'no-store' })).text();
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var rows = Array.prototype.map.call(doc.querySelectorAll('#galerie .g-item img'), function (im, i) {
+      return { image_url: im.getAttribute('src'), alt: im.getAttribute('alt'), sort_order: i };
+    });
+    var r = await sb.from('gallery').insert(rows);
+    if (r.error) return flash('Erreur import : ' + r.error.message, 'danger');
+    flash(rows.length + ' photos importées.'); loadGallery();
+  };
+
+  // ---------- Textes & infos ----------
+  var fields = [], dbText = {};
+  function toMarkup(node) {
+    var out = '';
+    node.childNodes.forEach(function (n) {
+      if (n.nodeType === 3) out += n.nodeValue.replace(/\s+/g, ' ');
+      else if (n.nodeName === 'BR') out += '\n';
+      else if (n.nodeName === 'STRONG' || n.nodeName === 'B') out += '**' + n.textContent.replace(/\s+/g, ' ') + '**';
+      else out += toMarkup(n);
+    });
+    return out;
+  }
+  async function loadTexts() {
+    try {
+      if (!fields.length) {
+        var html = await (await fetch('../index.html', { cache: 'no-store' })).text();
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var seen = {};
+        doc.querySelectorAll('[data-content]').forEach(function (el) {
+          var k = el.dataset.content; if (seen[k] || !el.dataset.label) return;
+          seen[k] = 1;
+          var def = toMarkup(el).replace(/ *\n */g, '\n').trim();
+          fields.push({ key: k, label: el.dataset.label, group: el.dataset.group || 'Autres', def: def,
+            area: el.dataset.type === 'textarea' || def.indexOf('\n') > -1 || def.length > 70 });
+        });
+      }
+      var r = await sb.from('site_content').select('key,value');
+      if (r.error) throw r.error;
+      dbText = {}; (r.data || []).forEach(function (x) { dbText[x.key] = x.value; });
+      renderTexts();
+    } catch (err) { $('textsForm').textContent = 'Erreur : ' + (err.message || err); }
+  }
+  function renderTexts() {
+    var groups = [], html = '';
+    fields.forEach(function (f) { if (groups.indexOf(f.group) < 0) groups.push(f.group); });
+    groups.forEach(function (g) {
+      html += '<div class="group-title">' + esc(g) + '</div>';
+      fields.filter(function (f) { return f.group === g; }).forEach(function (f) {
+        var v = dbText[f.key] != null && dbText[f.key] !== '' ? dbText[f.key] : f.def;
+        html += '<div class="form-group"><label class="small mb-1">' + esc(f.label) + '</label>' +
+          (f.area
+            ? '<textarea class="form-control" rows="' + Math.min(6, Math.max(2, v.split('\n').length + 1)) + '" data-key="' + f.key + '">' + esc(v) + '</textarea>'
+            : '<input class="form-control" data-key="' + f.key + '" value="' + esc(v) + '">') + '</div>';
+      });
+    });
+    $('textsForm').innerHTML = html;
+  }
+  $('textsSave').onclick = async function () {
+    var btn = this; btn.disabled = true;
+    try {
+      var up = [], del = [];
+      fields.forEach(function (f) {
+        var el = document.querySelector('[data-key="' + f.key + '"]'); if (!el) return;
+        var v = el.value.trim();
+        if (v === '' || v === f.def) { if (dbText[f.key] != null) del.push(f.key); }
+        else if (v !== dbText[f.key]) up.push({ key: f.key, value: v, updated_at: new Date().toISOString() });
+      });
+      if (up.length) { var a = await sb.from('site_content').upsert(up); if (a.error) throw a.error; }
+      if (del.length) { var b = await sb.from('site_content').delete().in('key', del); if (b.error) throw b.error; }
+      flash('Textes enregistrés (' + (up.length + del.length) + ' modification(s)). Visible sur le site dans quelques secondes.');
+      loadTexts();
+    } catch (err) { flash('Erreur : ' + (err.message || err), 'danger'); }
+    btn.disabled = false;
+  };
+
+  // ---------- Compte ----------
+  async function loadAccount() {
+    var u = await sb.auth.getUser();
+    $('curEmail').textContent = u.data && u.data.user ? u.data.user.email : '—';
+  }
+  $('emailBtn').onclick = async function () {
+    var em = $('newEmail').value.trim();
+    if (!/^\S+@\S+\.\S+$/.test(em)) return flash('Email invalide.', 'warning');
+    var r = await sb.auth.updateUser({ email: em }, { emailRedirectTo: location.href });
+    if (r.error) return flash('Erreur : ' + r.error.message, 'danger');
+    flash('Lien de confirmation envoyé. Clique dessus (sur l\'ancien ET le nouvel email si demandé) pour valider.', 'info');
+    $('newEmail').value = '';
+  };
+  $('passBtn').onclick = async function () {
+    var p = $('newPass').value;
+    if (p.length < 8) return flash('Mot de passe trop court (8 caractères minimum).', 'warning');
+    if (p !== $('newPass2').value) return flash('Les deux mots de passe sont différents.', 'warning');
+    var r = await sb.auth.updateUser({ password: p });
+    if (r.error) return flash('Erreur : ' + r.error.message, 'danger');
+    $('newPass').value = ''; $('newPass2').value = '';
+    flash('Mot de passe modifié.');
   };
 
   // ---------- Éditeur ----------
